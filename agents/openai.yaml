@@ -1,0 +1,4 @@
+interface:
+  display_name: "WordPress AXI"
+  short_description: "Manage WordPress through its REST API"
+  default_prompt: "Use the WordPress REST API to complete the requested content management task safely."
