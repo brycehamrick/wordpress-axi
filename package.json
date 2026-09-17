@@ -1,6 +1,6 @@
 {
   "name": "wordpress-axi",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "AXI-compliant CLI for WordPress - posts, pages, media, terms, comments, users, search, settings, plugins, and themes over the core REST API.",
   "type": "module",
   "license": "MIT",
