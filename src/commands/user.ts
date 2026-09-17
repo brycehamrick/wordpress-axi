@@ -111,6 +111,10 @@ const DELETE_FLAGS: Record<string, FlagDefinition> = {
   json: { type: "boolean" },
 };
 
+const ME_FLAGS: Record<string, FlagDefinition> = {
+  json: { type: "boolean" },
+};
+
 const ORDERBY_FIELDS = ["name", "id", "include", "registered_date", "email"] as const;
 const CONTEXTS = ["view", "embed", "edit"] as const;
 
@@ -140,7 +144,10 @@ export async function userCommand(args: string[], ctx: CommandContext): Promise<
 }
 
 /** `me`: the auth check - one cheap call proving credentials work. */
-export async function meCommand(_args: string[], ctx: CommandContext): Promise<AxiRenderable> {
+export async function meCommand(args: string[], ctx: CommandContext): Promise<AxiRenderable> {
+  const commandPath = "wordpress-axi me";
+  const { values, positionals } = parseFlags(args, commandPath, ME_FLAGS);
+  forbidExtraPositionals(positionals, 0, commandPath);
   const { data } = await ctx.client.request<Record<string, unknown>>("GET", "wp/v2/users/me", {
     query: { context: "edit" },
   });
@@ -161,7 +168,7 @@ export async function meCommand(_args: string[], ctx: CommandContext): Promise<A
         "Run `wordpress-axi post list --limit 5` for recent posts",
       ],
     },
-    false,
+    values["json"] === true,
   );
 }
 

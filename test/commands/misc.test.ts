@@ -120,6 +120,12 @@ describe("user command", () => {
     expect(me).toMatchObject({ id: 3, roles: ["editor"], capabilities: 31, site: "https://test.example" });
   });
 
+  it("me rejects unknown flags before any network call", async () => {
+    const { ctx } = contextFor([]);
+    await expect(meCommand(["--definitely-bogus"], ctx)).rejects.toMatchObject({ code: "VALIDATION_ERROR" });
+    await expect(meCommand(["--definitely-bogus"], ctx)).rejects.toThrow(/definitely-bogus/);
+  });
+
   it("create requires --confirm and surfaces generated passwords once", async () => {
     const { ctx } = contextFor([
       {

@@ -65,7 +65,7 @@ const COMMAND_HELP: Record<string, string> = {
   me: `wordpress-axi me - verify authentication and show the API user
 
 usage:
-  me
+  me [--json]
 
 One cheap authenticated call to wp/v2/users/me. Use this first whenever a
 command returns AUTH_REQUIRED or FORBIDDEN.`,
@@ -101,7 +101,24 @@ export async function main(): Promise<void> {
     version: VERSION,
     topLevelHelp: TOP_LEVEL_HELP,
     getCommandHelp: (command: string) => COMMAND_HELP[command] ?? null,
-    home: withContext(homeCommand),
+    home: (args: string[]) => {
+      // The home view is content-first even without credentials: degrade to
+      // a structured not-configured dashboard instead of an AUTH_REQUIRED
+      // error, so ambient session context and `wordpress-axi` with no args
+      // always orient the agent.
+      try {
+        return Promise.resolve(homeCommand(args, getContextOrAuthError()));
+      } catch (error) {
+        if (error instanceof AxiError) {
+          return Promise.resolve({
+            auth: "not-configured",
+            result: error.message,
+            help: error.suggestions,
+          });
+        }
+        return Promise.reject(error);
+      }
+    },
     commands: {
       post: withContext(createContentCommand(POST_RESOURCE)),
       page: withContext(createContentCommand(PAGE_RESOURCE)),
