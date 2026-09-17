@@ -1,0 +1,55 @@
+{
+  "name": "wordpress-axi",
+  "version": "1.0.0",
+  "description": "AXI-compliant CLI for WordPress - posts, pages, media, terms, comments, users, search, settings, plugins, and themes over the core REST API.",
+  "type": "module",
+  "license": "MIT",
+  "author": "Bryce Hamrick",
+  "keywords": [
+    "axi",
+    "wordpress",
+    "cli",
+    "agent",
+    "rest-api",
+    "cms",
+    "posts",
+    "pages",
+    "media",
+    "toon"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/brycehamrick/wordpress-axi.git"
+  },
+  "bin": {
+    "wordpress-axi": "bin/wordpress-axi.js"
+  },
+  "files": [
+    "bin",
+    "dist",
+    "skills",
+    "README.md",
+    "LICENSE"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run",
+    "skill:check": "node -e \"require('node:fs').accessSync('skills/wordpress-axi/SKILL.md')\"",
+    "prepublishOnly": "npm run typecheck && npm test && npm run skill:check && npm run build"
+  },
+  "dependencies": {
+    "axi-sdk-js": "^0.1.12"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.0",
+    "typescript": "^5.7.0",
+    "vitest": "^3.0.0"
+  }
+}
